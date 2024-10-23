@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formularios</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>¿Que registro deseas realizar?</h2>
+        
+        <!-- Nav Tabs para seleccionar el formulario -->
+        <ul class="nav nav-tabs" id="formTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="gastos-tab" data-bs-toggle="tab" data-bs-target="#gastos" type="button" role="tab" aria-controls="gastos" aria-selected="true">Gastos</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="categoria-tab" data-bs-toggle="tab" data-bs-target="#categoria" type="button" role="tab" aria-controls="categoria" aria-selected="false">Categoría</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="ingreso-tab" data-bs-toggle="tab" data-bs-target="#ingreso" type="button" role="tab" aria-controls="ingreso" aria-selected="false">Ingreso</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="ahorro-tab" data-bs-toggle="tab" data-bs-target="#ahorro" type="button" role="tab" aria-controls="ahorro" aria-selected="false">Ahorro</button>
+            </li>
+        </ul>
+
+        <!-- Contenedor de formularios con pestañas -->
+        <div class="tab-content" id="formContent">
+            <!-- Gastos -->
+            <div class="tab-pane fade show active" id="gastos" role="tabpanel" aria-labelledby="gastos-tab">
+                <div class="mt-3">
+                    <h3>Gastos</h3>
+                    <form id="formGastos">
+                        <div class="mb-3">
+                            <label for="strDescripcionGastos" class="form-label">Descripción de los Gastos</label>
+                            <input type="text" class="form-control" id="strDescripcionGastos" placeholder="Descripción de los gastos" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="strCategoriaGastos" class="form-label">Categoría de los Gastos</label>
+                            <input type="text" class="form-control" id="strCategoriaGastos" placeholder="Categoría de los gastos" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="dateFechaGastos" class="form-label">Fecha de los Gastos</label>
+                            <input type="date" class="form-control" id="dateFechaGastos" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="intValorGastos" class="form-label">Valor de los Gastos</label>
+                            <input type="number" class="form-control" id="intValorGastos" placeholder="Valor de los gastos" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Guardar Gasto</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Categoría -->
+            <div class="tab-pane fade" id="categoria" role="tabpanel" aria-labelledby="categoria-tab">
+                <div class="mt-3">
+                    <h3>Categoría</h3>
+                    <form id="formCategoria">
+                        <div class="mb-3">
+                            <label for="strNombreCategoria" class="form-label">Nombre de la Categoría</label>
+                            <input type="text" class="form-control" id="strNombreCategoria" placeholder="Nombre de la categoría" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="strDescripcionCategoria" class="form-label">Descripción de la Categoría</label>
+                            <input type="text" class="form-control" id="strDescripcionCategoria" placeholder="Descripción de la categoría" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="strFotoCategoria" class="form-label">URL de la Foto de la Categoría</label>
+                            <input type="text" class="form-control" id="strFotoCategoria" placeholder="URL de la foto" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Guardar Categoría</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Ingreso -->
+            <div class="tab-pane fade" id="ingreso" role="tabpanel" aria-labelledby="ingreso-tab">
+                <div class="mt-3">
+                    <h3>Ingreso</h3>
+                    <form id="formIngreso">
+                        <div class="mb-3">
+                            <label for="strDescripcionIngreso" class="form-label">Descripción del Ingreso</label>
+                            <input type="text" class="form-control" id="strDescripcionIngreso" placeholder="Descripción del ingreso" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="dateFechaIngreso" class="form-label">Fecha del Ingreso</label>
+                            <input type="date" class="form-control" id="dateFechaIngreso" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="intValorIngreso" class="form-label">Valor del Ingreso</label>
+                            <input type="number" class="form-control" id="intValorIngreso" placeholder="Valor del ingreso" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Guardar Ingreso</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Ahorro -->
+            <div class="tab-pane fade" id="ahorro" role="tabpanel" aria-labelledby="ahorro-tab">
+                <div class="mt-3">
+                    <h3>Ahorro</h3>
+                    <form id="formAhorro">
+                        <div class="mb-3">
+                            <label for="strConceptoAhorro" class="form-label">Concepto de Ahorro</label>
+                            <input type="text" class="form-control" id="strConceptoAhorro" placeholder="Concepto del ahorro" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="dateFechaAhorro" class="form-label">Fecha del Ahorro</label>
+                            <input type="date" class="form-control" id="dateFechaAhorro" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="intValorAhorro" class="form-label">Valor del Ahorro</label>
+                            <input type="number" class="form-control" id="intValorAhorro" placeholder="Valor del ahorro" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Guardar Ahorro</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

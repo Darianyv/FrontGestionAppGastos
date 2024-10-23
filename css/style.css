@@ -1,0 +1,116 @@
+/* Estilos generales */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #ffffff; /* Un fondo claro neutro */
+    color: #333; /* Texto en un gris oscuro */
+}
+
+/* Barra de navegación */
+.navbar {
+    background-color: #004c8c; /* Color oscuro para la barra de navegación */
+}
+
+.navbar .nav-link {
+    color: #333 !important; /* Color blanco para los enlaces de navegación */
+    font-weight: bold; /* Negrita para mejor visibilidad */
+}
+
+.navbar .nav-link:hover {
+    color: #7ed957 !important; /* Color verde del logo en hover */
+}
+
+/* Navbar-brand */
+.navbar-brand img {
+    max-height: 80px; /* Asegúrate que el logo se ajuste bien en la barra */
+}
+
+/* Logo */
+.navbar-brand img {
+    max-height: 80px; /* Asegúrate que el logo se ajuste bien en la barra */
+}
+
+/* Formulario de Inicio de Sesión y Registro */
+h2 {
+    color: #004c8c; /* Título en un azul fuerte */
+}
+
+.form-control {
+    border-radius: 5px;
+    border: 1px solid #b0c4de; /* Bordes suaves y ligeros */
+}
+
+.btn-primary {
+    background-color: #004c8c; /* Botón azul para el inicio de sesión */
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #003366; /* Oscurecer el azul en hover */
+}
+
+.btn-success {
+    background-color: #7ed957; /* Verde del logo para el botón de registro */
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.btn-success:hover {
+    background-color: #66c44f; /* Oscurecer ligeramente el verde en hover */
+}
+
+/* Footer */
+.footer {
+    background-color: #004c8c; /* Fondo azul fuerte para el footer */
+    padding: 20px 0;
+}
+
+.footer p {
+    margin: 0;
+    color: #ffffff; /* Texto blanco en el footer */
+}
+
+/* Estilos Responsivos */
+@media (max-width: 768px) {
+    .navbar-brand img {
+        max-height: 50px; /* Ajusta el logo en pantallas más pequeñas */
+    }
+
+    h2 {
+        font-size: 1.5rem; /* Títulos más pequeños en pantallas pequeñas */
+    }
+
+    .container {
+        padding: 0 20px;
+    }
+}
+
+@media (max-width: 576px) {
+    .navbar-brand img {
+        max-height: 40px; /* Más pequeño en pantallas muy pequeñas */
+    }
+
+    .form-control {
+        font-size: 0.9rem; /* Campos más compactos */
+    }
+}
+/* Ocultar formularios inicialmente */
+.form-container {
+    display: none;
+}
+
+/* Diseño para la barra de navegación */
+.navbar {
+    margin-bottom: 20px;
+}
+
+/* Estilo para el footer */
+.footer {
+    background-color: #343a40;
+    color: white;
+    padding: 20px 0;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+
