@@ -11,3 +11,4 @@ document.getElementById("hideRegisterForm").addEventListener("click", function(e
     document.getElementById("registerFormContainer").classList.add("d-none");
     document.getElementById("loginFormContainer").classList.remove("d-none");
 });
+
