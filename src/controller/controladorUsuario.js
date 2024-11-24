@@ -9,13 +9,7 @@ const userLocation = document.getElementById("userLocation");
 const savings = document.getElementById("savings");
 const email = document.getElementById("email");
 const password = document.getElementById("password");
-
-// Mostrar y ocultar formularios de registro e inicio de sesión
-let showRegisterForm = document.getElementById("showRegisterForm");
-let hideRegisterForm = document.getElementById("hideRegisterForm");
-let registerFormContainer = document.getElementById("registerFormContainer");
-let loginFormContainer = document.getElementById("loginFormContainer");
-let loginError = document.getElementById("loginError");
+const loginError = document.getElementById("loginError");
 
 
 // Manejo de inicio de sesión
@@ -49,41 +43,51 @@ buttonLogin.addEventListener("click", async function(event) {
 
 // Registro de usuario
 buttonRegister.addEventListener("click", async (event) => {
-    event.preventDefault();
+    event.preventDefault(); // Prevenir comportamiento por defecto
 
-    if (!nameUser.value || !birthDate.value || !userLocation.value || isNaN(parseInt(savings.value, 10))) {
-        showNotification("Todos los campos son obligatorios y la meta de ahorro debe ser un número.", "danger");
+    // Validación de campos
+    if (
+        !nameUser.value ||
+        !birthDate.value ||
+        !userLocation.value ||
+        isNaN(parseInt(savings.value, 10)) ||
+        !email.value ||
+        !password.value
+    ) {
+        alert("Todos los campos son obligatorios.");
         return;
     }
 
+    // Crear el objeto de datos
     const datosUsuario = {
         strNombre: nameUser.value,
         dateFechaNacimiento: birthDate.value,
         strUbicacion: userLocation.value,
         intMetaAhorro: parseInt(savings.value, 10),
+        strEmail: email.value,
+        strContraseña: password.value,
     };
 
     try {
-        const response = await registrarUsuario(datosUsuario);
-        if (response.success) {
-            showNotification("Usuario registrado correctamente.", "success");
+        const response = await fetch("http://localhost:8000/usuario", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(datosUsuario),
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            alert("Usuario registrado exitosamente.");
+            document.getElementById("registerForm").reset(); // Limpiar formulario
         } else {
-            showNotification("Hubo un problema al registrar al usuario.", "danger");
+            const errorData = await response.json();
+            alert("Error al registrar usuario: " + JSON.stringify(errorData));
         }
     } catch (error) {
-        console.error("Error al registrar usuario:", error);
-        showNotification("Error al registrar usuario.", "danger");
-    }
-});
-
-buttonRegister.addEventListener("click", async (event) => {
-    console.log("Button clicked");
-    try {
-        console.log("Datos enviados:", datosUsuario);
-        const response = await registrarUsuario(datosUsuario);
-        console.log("Respuesta recibida:", response);
-    } catch (error) {
-        console.error("Error detectado:", error);
+        console.error("Error en el registro:", error);
+        alert("Ocurrió un error al registrar al usuario.");
     }
 });
 // Obtener y renderizar usuarios

@@ -41,15 +41,12 @@ export async function registrarUsuario(datosUsuario) {
         alert("Error al registrar el usuario. Intenta más tarde.");
     }
 }
-
-//Función para Iniciar Sesión
-
 export async function iniciarSesion(credenciales) {
     const URL = "http://localhost:8000/login";
     let peticiones = {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(credenciales),  // Enviar como JSON
+        body: JSON.stringify(credenciales),
     };
 
     try {
@@ -64,4 +61,3 @@ export async function iniciarSesion(credenciales) {
         alert("Error al iniciar sesión. Verifica tus datos.");
     }
 }
-
