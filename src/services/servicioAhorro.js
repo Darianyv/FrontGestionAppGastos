@@ -1,5 +1,5 @@
 export async function guardarAhorro(datosAhorro) {
-    const URL = "http://localhost:8000/ahorro";
+    const URL = "http://localhost:8000/ahorro";  // Verifica que esta ruta sea correcta
     const peticiones = {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -20,7 +20,7 @@ export async function guardarAhorro(datosAhorro) {
 }
 
 export async function buscarAhorro() {
-    const URL = "http://localhost:8000/ahorros";
+    const URL = "http://localhost:8000/ahorros";  // Verifica que esta ruta sea correcta
     const peticiones = {
         method: "GET",
     };
@@ -37,3 +37,4 @@ export async function buscarAhorro() {
         alert("Error al buscar los ahorros. Intenta más tarde.");
     }
 }
+

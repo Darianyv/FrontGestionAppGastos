@@ -1,91 +1,113 @@
-// Importa las funciones necesarias del servicio
 import { guardarAhorro, buscarAhorro } from "../services/servicioAhorro";
 
-// Función principal que se ejecuta cuando el DOM está completamente cargado
-document.addEventListener("DOMContentLoaded", () => {
-    const buttonGuardarAhorro = document.getElementById("GuardarAhorro");
-
-    if (buttonGuardarAhorro) {
-        buttonGuardarAhorro.addEventListener("click", handleGuardarAhorro);
-    } else {
-        console.error("El botón GuardarAhorro no se encontró en el DOM.");
-    }
-
-    // Llama a la función para mostrar los ahorros al cargar la página
-    mostrarAhorros();
-});
-
-// Maneja el evento de clic del botón GuardarAhorro
-async function handleGuardarAhorro(event) {
-    event.preventDefault();
-
-    // Obtiene los valores de los campos del formulario
-    const concepto = document.getElementById("strConceptoAhorro").value;
-    const fecha = document.getElementById("dateFechaAhorro").value;
-    const valor = parseInt(document.getElementById("intValorAhorro").value, 10);
-
-    // Valida los campos del formulario
-    if (!validateFields(concepto, fecha, valor)) {
-        alert("Todos los campos son obligatorios y el valor debe ser mayor a cero.");
-        return;
-    }
-
-    const datosAhorro = {
-        strConceptoAhorro: concepto,
-        dateFechaAhorro: fecha,
-        intValorAhorro: valor,
-    };
-
-    // Intenta guardar el ahorro y manejar errores si ocurren
-    try {
-        const respuesta = await guardarAhorro(datosAhorro);
-        if (respuesta) {
-            alert("Ahorro registrado exitosamente.");
-            document.getElementById("formAhorro").reset(); // Limpia el formulario
-            mostrarAhorros(); // Actualiza la lista de ahorros
-        }
-    } catch (error) {
-        console.error("Error al guardar el ahorro:", error);
-        alert("Error al guardar el ahorro. Intenta nuevamente.");
-    }
-}
-
-// Función para mostrar los ahorros en el contenedor
-async function mostrarAhorros() {
+document.addEventListener("DOMContentLoaded", async () => {
+    const formAhorro = document.getElementById("formAhorro");
+    const botonAhorro = document.getElementById("GuardarAhorro");
     const contenedorAhorros = document.getElementById("contenedorAhorros");
 
-    // Verifica que el contenedor existe
-    if (!contenedorAhorros) {
-        console.error("El contenedor de ahorros no se encontró en el DOM.");
-        return;
-    }
+    // Función para mostrar los ahorros en el DOM
+    async function mostrarAhorros() {
+        // Verifica que el contenedor existe
+        if (!contenedorAhorros) {
+            console.error("El contenedor de ahorros no se encontró en el DOM.");
+            return;
+        }
 
-    try {
-        const ahorros = await buscarAhorro();
-        contenedorAhorros.classList.remove("d-none"); // Muestra el contenedor si estaba oculto
-        contenedorAhorros.innerHTML = ""; // Limpia el contenido anterior
+        try {
+            const ahorros = await buscarAhorro(); // Asegúrate de que el servicio está correctamente implementado
+            contenedorAhorros.innerHTML = ""; // Limpia el contenido previo
 
-        ahorros.forEach((ahorro) => {
-            const ahorroHTML = `
-                <div class="col-md-4">
-                    <div class="card mb-3">
-                        <div class="card-body">
-                            <h5 class="card-title">${ahorro.strConceptoAhorro}</h5>
-                            <p class="card-text">Fecha: ${ahorro.dateFechaAhorro}</p>
-                            <p class="card-text">Valor: $${ahorro.intValorAhorro}</p>
+            if (ahorros.length === 0) {
+                contenedorAhorros.innerHTML = `
+                    <p class="text-center">No se encontraron ahorros registrados.</p>
+                `;
+                return;
+            }
+
+            // Genera el HTML para cada ahorro
+            ahorros.forEach((ahorro) => {
+                const ahorroHTML = `
+                    <div class="col-md-4">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">${ahorro.strConceptoAhorro}</h5>
+                                <p class="card-text">Fecha: ${new Date(ahorro.dateFechaAhorro).toLocaleDateString()}</p>
+                                <p class="card-text">Valor: $${ahorro.intValorAhorro.toLocaleString()}</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-            `;
-            contenedorAhorros.innerHTML += ahorroHTML;
-        });
-    } catch (error) {
-        console.error("Error al mostrar los ahorros:", error);
-        alert("Error al mostrar los ahorros. Intenta más tarde.");
+                `;
+                contenedorAhorros.innerHTML += ahorroHTML;
+            });
+        } catch (error) {
+            console.error("Error al mostrar los ahorros:", error);
+        }
     }
+
+    // Manejador de eventos para guardar ahorro
+    if (botonAhorro) {
+        botonAhorro.addEventListener("click", async (evento) => {
+            evento.preventDefault();
+
+            // Obtiene los valores del formulario
+            const datosAhorro = {
+                strConceptoAhorro: document.getElementById("strConceptoAhorro").value.trim(),
+                dateFechaAhorro: document.getElementById("dateFechaAhorro").value,
+                intValorAhorro: parseInt(document.getElementById("intValorAhorro").value, 10),
+            };
+
+            // Validación de los datos
+            if (!datosAhorro.strConceptoAhorro || !datosAhorro.dateFechaAhorro || isNaN(datosAhorro.intValorAhorro) || datosAhorro.intValorAhorro <= 0) {
+                alert("Por favor, complete todos los campos correctamente.");
+                return;
+            }
+
+            try {
+                const respuesta = await guardarAhorro(datosAhorro);
+                if (respuesta) {
+                    alert("Ahorro registrado exitosamente.");
+                    formAhorro.reset(); // Limpia el formulario
+                    await mostrarAhorros(); // Actualiza la lista de ahorros
+                } else {
+                    alert("No se pudo registrar el ahorro. Intenta nuevamente.");
+                }
+            } catch (error) {
+                console.error("Error al registrar el ahorro:", error);
+                alert("Ocurrió un error al registrar el ahorro. Intenta nuevamente.");
+            }
+        });
+    } else {
+        console.error("El botón de guardar ahorro no se encontró en el DOM.");
+    }
+
+    // Carga inicial de ahorros al cargar la página
+    await mostrarAhorros();
+});
+
+// Función para mostrar los ahorros de forma similar al ejemplo que me diste
+function mostrarDatos(tipo) {
+    const contenedores = {
+        ahorros: "contenedorAhorros"
+    };
+
+    const contenedorId = contenedores[tipo];
+    if (!contenedorId) return;
+
+    // Muestra el contenedor correspondiente
+    const contenedor = document.getElementById(contenedorId);
+    contenedor.classList.remove("d-none");
+
+    // Agrega datos simulados
+    contenedor.innerHTML = `
+        <div class="card m-2">
+            <div class="card-body">
+                <h5 class="card-title">Ejemplo Ahorro</h5>
+                <p class="card-text">Descripción: Este es un ejemplo de ahorro</p>
+                <p class="card-text">Valor: $100</p>
+            </div>
+        </div>
+    `;
 }
 
-// Valida los campos del formulario
-function validateFields(concepto, fecha, valor) {
-    return concepto && fecha && !isNaN(valor) && valor > 0;
-}
+// Eventos para cada botón
+document.getElementById("GuardarAhorro").addEventListener("click", () => mostrarDatos("ahorros"));
