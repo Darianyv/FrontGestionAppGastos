@@ -1,7 +1,6 @@
 /* Estilos generales */
 body {
     font-family: 'Arial', sans-serif;
-    background-image: url(../images/portada.png);
     opacity: 0.7;
     background-size: cover;
     background-position: center;
@@ -23,7 +22,7 @@ h2 {
 }
 
 .navbar .nav-link {
-    color: #333 !important;
+    color: #ffffff;
     font-weight: bold;
 }
 
@@ -44,7 +43,7 @@ h2 {
 /* Formulario de Inicio de Sesión y Registro */
 .form-control {
     border-radius: 5px;
-    border: 1px solid #b0c4de;
+    border: 1px solid #000000;
 }
 
 .btn-primary {
@@ -69,13 +68,52 @@ h2 {
 
 /* Estilo para el Footer */
 .footer {
-    background-color: #004c8c;
-    color: white;
+    background-color: #004c8c; /* Azul oscuro */
+    color: rgb(0, 0, 0);
     padding: 20px 0;
     width: 100%;
-    bottom: 0;
     text-align: center;
+    position: relative;
 }
+
+.footer p {
+    margin: 0;
+}
+
+.footer-links a {
+    color: black;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+.footer-links a:hover {
+    text-decoration: underline;
+}
+
+.github-links {
+    margin-top: 15px;
+}
+
+.github-links ul {
+    padding: 0;
+    margin: 0;
+}
+
+.github-links li {
+    list-style: none;
+    margin: 5px 0;
+}
+
+.github-link {
+    color: #000000; /* Verde del logo */
+    text-decoration: none;
+}
+
+.github-link:hover {
+    text-decoration: underline;
+    color: #a8e685; /* Tono más claro del verde */
+}
+
 
 /* Estilos Responsivos */
 @media (max-width: 768px) {
@@ -183,25 +221,5 @@ a:hover {
     font-size: 14px;
     margin-top: 10px;
 }
-/* Estilo para los gastos */
-.gasto-item {
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 15px;
-    margin-bottom: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
 
-.gasto-item h4 {
-    margin: 0;
-    font-size: 18px;
-    color: #333;
-}
-
-.gasto-item p {
-    margin: 5px 0;
-    font-size: 14px;
-    color: #555;
-}
 

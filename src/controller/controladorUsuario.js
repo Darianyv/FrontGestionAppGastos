@@ -1,4 +1,4 @@
-import { buscarUsuario, registrarUsuario, iniciarSesion } from "../../services/servicioUsuario.js";
+import { buscarUsuario, registrarUsuario, iniciarSesion } from "../services/servicioUsuario.js";
 import { showNotification } from "../../js/notificaciones.js";
 
 
