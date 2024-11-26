@@ -1,100 +1,91 @@
-import { registrarGasto, buscarGasto } from "../../services/servicioGastos.js";
+// Importa las funciones necesarias del servicio
+import { guardarGasto, buscarGasto } from "../services/servicioGastos.js";
 
-// Elementos del formulario
-const formGastos = document.getElementById("formGastos");
-const strDescripcionGastos = document.getElementById("strDescripcionGastos");
-const strCategoriaGastos = document.getElementById("strCategoriaGastos");
-const dateFechaGastos = document.getElementById("dateFechaGastos");
-const intValorGastos = document.getElementById("intValorGastos");
-const contenedorGastos = document.getElementById("contenedorGastos");
+document.addEventListener("DOMContentLoaded", async () => {
+    const buttonGuardarGastos = document.getElementById("GuardarGastos");
+    const contenedorGastos = document.getElementById("contenedorGastos");
 
-// Función para manejar el registro de gastos
-const btnGuardarGasto = document.getElementById("GuardarGastos");
+    // Asigna el evento al botón de guardar gastos
+    if (buttonGuardarGastos) {
+        buttonGuardarGastos.addEventListener("click", handleGuardarGasto);
+    } else {
+        console.error("El botón GuardarGastos no se encontró en el DOM.");
+    }
 
-btnGuardarGasto.addEventListener("click", async (event) => {
-    event.preventDefault(); // Prevenir comportamiento por defecto
-    
-    // Aquí puedes reutilizar el código para validar y registrar el gasto
-    if (
-        !strDescripcionGastos.value.trim() ||
-        !strCategoriaGastos.value.trim() ||
-        !dateFechaGastos.value ||
-        isNaN(parseInt(intValorGastos.value, 10)) ||
-        parseInt(intValorGastos.value, 10) <= 0
-    ) {
-        alert("Todos los campos son obligatorios y el valor debe ser mayor a 0.");
+    // Carga los gastos al cargar la página
+    await cargarGastos(contenedorGastos);
+});
+
+// Maneja el evento de clic del botón GuardarGastos
+async function handleGuardarGasto(event) {
+    event.preventDefault();
+
+    // Obtiene los valores de los campos del formulario
+    const descripcion = document.getElementById("strDescripcionGastos").value;
+    const categoria = document.getElementById("strCategoriaGastos").value;
+    const fecha = document.getElementById("dateFechaGastos").value;
+    const valor = parseInt(document.getElementById("intValorGastos").value, 10);
+
+    // Valida los campos del formulario
+    if (!validateFields(descripcion, categoria, fecha, valor)) {
+        alert("Todos los campos son obligatorios y el valor debe ser mayor a cero.");
         return;
     }
 
     const datosGasto = {
-        strDescripcionGastos: strDescripcionGastos.value.trim(),
-        strCategoriaGastos: strCategoriaGastos.value.trim(),
-        dateFechaGastos: dateFechaGastos.value,
-        intValorGastos: parseInt(intValorGastos.value, 10),
+        strDescripcionGastos: descripcion,
+        strCategoriaGastos: categoria,
+        dateFechaGastos: fecha,
+        intValorGastos: valor,
     };
 
+    // Intenta guardar el gasto
     try {
-        const resultado = await registrarGasto(datosGasto);
-        alert("Gasto registrado exitosamente.");
-        formGastos.reset(); // Limpia el formulario
-        cargarGastos(); // Actualiza la lista de gastos
+        const respuesta = await guardarGasto(datosGasto);
+        if (respuesta) {
+            alert("Gasto registrado exitosamente.");
+            document.getElementById("formGastos").reset();
+            await cargarGastos(document.getElementById("contenedorGastos"));
+        }
     } catch (error) {
-        console.error("Error al registrar el gasto:", error);
-        alert("Ocurrió un error al registrar el gasto. Por favor, inténtalo más tarde.");
+        console.error("Error al guardar el gasto:", error);
+        alert("Error al guardar el gasto. Intenta nuevamente.");
     }
-});
+}
 
-
-// Función para cargar y renderizar todos los gastos
-async function cargarGastos() {
+// Carga y renderiza los gastos en el contenedor
+async function cargarGastos(contenedor) {
     try {
         const gastos = await buscarGasto();
-        contenedorGastos.innerHTML = ""; // Limpiar el contenedor antes de renderizar
-        gastos.forEach((gasto) => renderGasto(gasto));
+        contenedor.innerHTML = ""; // Limpia el contenido previo
+        if (gastos.length === 0) {
+            contenedor.innerHTML = `<p>No hay gastos registrados.</p>`;
+            return;
+        }
+
+        // Renderiza cada gasto
+        gastos.forEach((gasto) => {
+            const card = document.createElement("div");
+            card.className = "col-md-4 mb-3";
+            card.innerHTML = `
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">${gasto.strDescripcionGastos}</h5>
+                        <p class="card-text">Categoría: ${gasto.strCategoriaGastos}</p>
+                        <p class="card-text">Fecha: ${new Date(gasto.dateFechaGastos).toLocaleDateString()}</p>
+                        <p class="card-text">Valor: $${gasto.intValorGastos}</p>
+                    </div>
+                </div>
+            `;
+            contenedor.appendChild(card);
+        });
     } catch (error) {
         console.error("Error al cargar los gastos:", error);
-        alert("Error al cargar los gastos. Intenta más tarde.");
+        contenedor.innerHTML = `<p>Error al cargar los gastos. Intenta más tarde.</p>`;
     }
 }
 
-// Función para renderizar un gasto en la interfaz
-function renderGasto(gasto) {
-    const item = document.createElement("div");
-    item.classList.add("gasto-item", "card", "mb-3");
-    item.innerHTML = `
-        <div class="card-body">
-            <h5 class="card-title">${gasto.strDescripcionGastos}</h5>
-            <p class="card-text">Categoría: ${gasto.strCategoriaGastos}</p>
-            <p class="card-text">Fecha: ${gasto.dateFechaGastos}</p>
-            <p class="card-text">Valor: $${gasto.intValorGastos.toLocaleString()}</p>
-            <button class="btn btn-warning btn-sm" onclick="editarGasto(${gasto.id})">Editar</button>
-            <button class="btn btn-danger btn-sm" onclick="eliminarGasto(${gasto.id})">Eliminar</button>
-        </div>
-    `;
-    contenedorGastos.appendChild(item);
+// Valida los campos del formulario
+function validateFields(descripcion, categoria, fecha, valor) {
+    return descripcion && categoria && fecha && !isNaN(valor) && valor > 0;
 }
-
-// Función para editar un gasto (opcional, requiere implementación)
-async function editarGasto(id) {
-    // Aquí puedes abrir un modal o formulario prellenado para editar el gasto
-    alert(`Función para editar gasto con ID: ${id} (por implementar).`);
-}
-
-// Función para eliminar un gasto (opcional, requiere implementación)
-async function eliminarGasto(id) {
-    const confirmar = confirm("¿Estás seguro de que deseas eliminar este gasto?");
-    if (!confirmar) return;
-
-    try {
-        // Llama a tu servicio de eliminación (a implementar)
-        await eliminarGastoServicio(id);
-        alert("Gasto eliminado exitosamente.");
-        cargarGastos(); // Recarga la lista de gastos
-    } catch (error) {
-        console.error("Error al eliminar el gasto:", error);
-        alert("No se pudo eliminar el gasto. Intenta nuevamente.");
-    }
-}
-
-// Cargar gastos al inicializar la página
-document.addEventListener("DOMContentLoaded", cargarGastos);

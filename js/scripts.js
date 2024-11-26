@@ -1,3 +1,5 @@
+
+
 // Mostrar el formulario de registro y ocultar el de inicio de sesión
 document.getElementById("showRegisterForm").addEventListener("click", function(event) {
     event.preventDefault();

@@ -1,32 +1,34 @@
-export async function buscarIngresos(){
-    //1. PA ONDE VOY / URL SERVICIO
-    const URL="http://localhost:8000/ingresos"
-    //2 A HACER QUE OME / CONF PETICION
-    let peticion={
-        method:"GET"
+export async function buscarIngreso() {
+    const URL = "http://localhost:8000/ingresos";
+    try {
+        const respuesta = await fetch(URL, { method: "GET" });
+        if (!respuesta.ok) throw new Error("No se pudo obtener la información de los ingresos.");
+        return await respuesta.json();
+    } catch (error) {
+        console.error("Error al buscar los ingresos:", error);
+        alert("Error al buscar los ingresos. Intenta más tarde.");
     }
-    //3. VAYA PS OME / CONSUMA EL API
-    let respuestaInicial=await fetch(URL,peticion)
-    let respuestaFinal=await respuestaInicial.json()
-    return(respuestaFinal)
 }
 
 export async function registrarIngreso(datosIngreso) {
     const URL = "http://localhost:8000/ingreso";
-    let peticion = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(datosIngreso),
-    };
+
     try {
-        let respuestaInicial = await fetch(URL, peticion);
-        if (!respuestaInicial.ok) {
-            throw new Error(`Error: ${respuestaInicial.status} ${respuestaInicial.statusText}`);
+        const respuesta = await fetch(URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(datosIngreso),
+        });
+
+        if (!respuesta.ok) {
+            throw new Error(`Error ${respuesta.status}: ${respuesta.statusText}`);
         }
-        let respuestaFinal = await respuestaInicial.json();
-        console.log(respuestaFinal);
+
+        return await respuesta.json(); // Devuelve la respuesta para mostrar un mensaje o actualizar la interfaz
     } catch (error) {
-        console.error("Error en registrarIngreso:", error);
+        console.error("Error al registrar el ingreso:", error);
+        throw error; // Permite manejar el error en el controlador
     }
 }
+
 

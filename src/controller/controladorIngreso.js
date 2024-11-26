@@ -1,46 +1,85 @@
-import { registrarIngreso,buscarIngresos } from "../services/servicioIngreso.js";
+import { registrarIngreso, buscarIngreso } from "../services/servicioIngreso.js";
 
-// Obtén los valores de los campos
-let strDescripcionIngreso = document.getElementById("strDescripcionIngreso");
-let dateFechaIngreso = document.getElementById("dateFechaIngreso");
-let intValorIngreso = document.getElementById("intValorIngreso");
+document.addEventListener("DOMContentLoaded", async () => {
+    const formIngreso = document.getElementById("formIngreso");
+    const botonIngreso = document.getElementById("GuardarIngreso");
+    const contenedorIngresos = document.getElementById("contenedorIngresos");
 
-let botonIngreso=document.getElementById("GuardarIngreso")
+    // Función para mostrar los ingresos en el DOM
+    async function mostrarIngresos() {
+        // Verifica que el contenedor existe
+        if (!contenedorIngresos) {
+            console.error("El contenedor de ingresos no se encontró en el DOM.");
+            return;
+        }
 
-botonIngreso.addEventListener("click",function(evento){
-    evento.preventDefault()
+        try {
+            const ingresos = await buscarIngreso(); // Asegúrate de que el servicio está correctamente implementado
+            contenedorIngresos.innerHTML = ""; // Limpia el contenido previo
 
-    let objetoEnvioIngreso={
+            if (ingresos.length === 0) {
+                contenedorIngresos.innerHTML = `
+                    <p class="text-center">No se encontraron ingresos registrados.</p>
+                `;
+                return;
+            }
 
-        strDescripcionIngreso: strDescripcionIngreso.value,
-        dateFechaIngreso: dateFechaIngreso.value,
-        intValorIngreso: parseInt(intValorIngreso.value) 
-
+            // Genera el HTML para cada ingreso
+            ingresos.forEach((ingreso) => {
+                const ingresoHTML = `
+                    <div class="col-md-4">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">${ingreso.strDescripcionIngreso}</h5>
+                                <p class="card-text">Fecha: ${new Date(ingreso.dateFechaIngreso).toLocaleDateString()}</p>
+                                <p class="card-text">Valor: $${ingreso.intValorIngreso.toLocaleString()}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                contenedorIngresos.innerHTML += ingresoHTML;
+            });
+        } catch (error) {
+            console.error("Error al mostrar los ingresos:", error);
+        }
     }
 
-    registrarIngreso(objetoEnvioIngreso)
-})
+    // Manejador de eventos para guardar ingreso
+    if (botonIngreso) {
+        botonIngreso.addEventListener("click", async (evento) => {
+            evento.preventDefault();
 
-buscarIngresos().then(function(respuesta){
-    //2. Recorrer el arreglo de datos del back
-let fila=document.getElementById("fila")
-respuesta.forEach(function(ingreso){
-    
-    //2.1 TRAVERSING
-    let columna=document.createElement("div")
-    columna.classList.add("col")
+            // Obtiene los valores del formulario
+            const datosIngreso = {
+                strDescripcionIngreso: document.getElementById("strDescripcionIngreso").value.trim(),
+                dateFechaIngreso: document.getElementById("dateFechaIngreso").value,
+                intValorIngreso: parseInt(document.getElementById("intValorIngreso").value, 10),
+            };
 
-    let tarjeta=document.createElement("div")
-    tarjeta.classList.add("card","h-100","p-5","shadow")
+            // Validación de los datos
+            if (!datosIngreso.strDescripcionIngreso || !datosIngreso.dateFechaIngreso || isNaN(datosIngreso.intValorIngreso) || datosIngreso.intValorIngreso <= 0) {
+                alert("Por favor, complete todos los campos correctamente.");
+                return;
+            }
 
-    let nombrecard=document.createElement("h3")
-    nombrecard.textContent=ingreso.nombres
+            try {
+                const respuesta = await registrarIngreso(datosIngreso);
+                if (respuesta) {
+                    alert("Ingreso registrado exitosamente.");
+                    formIngreso.reset(); // Limpia el formulario
+                    await mostrarIngresos(); // Actualiza la lista de ingresos
+                } else {
+                    alert("No se pudo registrar el ingreso. Intenta nuevamente.");
+                }
+            } catch (error) {
+                console.error("Error al registrar el ingreso:", error);
+                alert("Ocurrió un error al registrar el ingreso. Intenta nuevamente.");
+            }
+        });
+    } else {
+        console.error("El botón de guardar ingreso no se encontró en el DOM.");
+    }
 
-    //2.2 Se asocian las creaciones
-    tarjeta.appendChild(nombrecard)
-    columna.appendChild(tarjeta)
-    fila.appendChild(columna)
-
-})
-})
-
+    // Carga inicial de ingresos al cargar la página
+    await mostrarIngresos();
+});
